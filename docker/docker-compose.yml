@@ -1,0 +1,47 @@
+version: '2.4'
+
+services:
+  enhancement:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_speech_enhancement
+      args:
+        SPEECH_BRAIN_RELEASE: ${release_num}
+    image: knoxdeng/speech_enhancement:${release_num}
+    container_name: speech_enhancement
+    restart: "no"
+    volumes:
+      - ../app:/app:ro
+    network_mode: none
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  enhancement-with-net:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_speech_enhancement
+      args:
+        SPEECH_BRAIN_RELEASE: ${release_num}
+    image: knoxdeng/speech_enhancement:${release_num}
+    container_name: speech_enhancement
+    restart: "no"
+    volumes:
+      - ../app:/app:ro
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

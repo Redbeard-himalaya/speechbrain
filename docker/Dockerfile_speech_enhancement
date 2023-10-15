@@ -1,0 +1,9 @@
+FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+
+ARG SPEECH_BRAIN_RELEASE
+
+COPY app/speech_enhance.py .
+
+RUN pip install speechbrain==${SPEECH_BRAIN_RELEASE} ffpb && \
+    python -c "from speech_enhance import SpeechEnhancer; [SpeechEnhancer(model_id=i, download_only=True) for i, _ in SpeechEnhancer.MODELS.items()]" && \
+    rm -rf results speech_enhance.py
